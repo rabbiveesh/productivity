@@ -1,0 +1,57 @@
+#!/usr/bin/perl
+#
+use v5.22;
+use Mojo::File qw/path/;
+use Mojo::Util qw/encode decode/;
+use utf8;
+
+my $fname = shift or die "Need a filename to set up.";
+
+unlink glob '*.latexmain';
+
+$fname =~ s/.tex$//;
+
+my $ltxm = path("$fname.tex.latexmain")->touch;
+die 'Failed to set the latexmain file' unless $ltxm->stat;
+
+my $outfile= path("$fname.tex");
+exit if $outfile->stat;
+
+say "What is your topic? (In Hebrew)";
+
+my $inyan = <>;
+$inyan = decode 'UTF-8', $inyan;
+chomp $inyan;
+
+my $chabura = <<EOF;
+\\documentclass{chabura}
+
+\\begin{document}
+
+%\\input{${fname}cover}
+
+\\section{בענין $inyan}
+
+\\subsection{  }
+
+\\end{document}
+EOF
+
+my $coverpage = <<EOF;
+\\begin{coverpage}{$inyan}
+
+  \\General
+
+
+
+  \\Proofs
+
+\\end{coverpage}
+EOF
+
+
+
+$outfile->spurt(encode 'UTF-8', $chabura);
+
+#open $out, ">", "${fname}cover.tex" or die "Couldn't open cover page";
+#print $out $coverpage;

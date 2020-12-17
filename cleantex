@@ -1,0 +1,9 @@
+#!/bin/bash
+
+a=$1
+
+#rm ${a/.tex/.aux}
+rm ${a/.tex/.toc}
+rm ${a/.tex/.out}
+rm ${a/.tex/.log}
+rm ${a/.tex/.synctex.gz}

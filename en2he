@@ -1,0 +1,61 @@
+#! /usr/bin/env perl
+use utf8;
+binmode STDIN, ":utf8";
+binmode STDOUT, ":utf8";
+
+%en2he=(
+  a => "ש",
+  b => "נ",
+  c => "ב",
+  d => "ג",
+  e => "ק",
+  f => "כ",
+  g => "ע",
+  h => "י",
+  i => "ן",
+  j => "ח",
+  k => "ל",
+  l => "ך",
+  m => "צ",
+  n => "מ",
+  o => "ם",
+  p => "פ",
+  q => "/",
+  r => "ר",
+  s => "ד",
+  t => "א",
+  u => "ו",
+  v => "ה",
+  w => "'",
+  x => "ס",
+  y => "ט",
+  z => "ז",
+"," => "ת",
+"." => "ץ",
+"/" => ".",
+";" => "ף",
+"'" => ",",
+#some stuff for cp1252 issues
+"\x{93}", => '"',
+"\x{94}", => '"',
+"\x{91}", => "'",
+"\x{92}", => "'",
+
+);
+
+%he2en= reverse %en2he;
+
+if ( $0 =~ '/' ){
+$0=~ s/.*\///g; #remove beginning of filename
+}
+
+while (<>) {
+  foreach $i (split //) {
+    if (exists $$0{$i} ) {
+    print $$0{$i};
+  }
+    else {
+      print $i
+    }
+  }
+}

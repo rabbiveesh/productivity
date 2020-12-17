@@ -1,0 +1,5 @@
+#! /bin/bash
+oldmain=`dir -1|grep latexmain`
+rm $oldmain
+for i in *.tex; do touch $i.latexmain; vim -R $i -c "normal \ll" -c "qall!"; rm $i.latexmain; done
+touch $oldmain

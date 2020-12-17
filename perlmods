@@ -1,0 +1,12 @@
+#! /usr/bin/env perl
+
+use Complete::Fish qw/format_completion/;
+use Module::List::Wildcard qw/list_modules/;
+
+my $mod = shift;
+
+print format_completion [
+ keys %{
+   list_modules "$mod*", { list_modules => 1, list_prefixes => 1, wildcard => 1, list_pod => 1 }
+   }
+ ] 

@@ -1,0 +1,10 @@
+#! /bin/bash
+#Just another issue in our doc converter series. For changing our 
+#chaburas to docx for yeshivish publishing
+
+sorce=$1
+
+vim -R $sorce -c "silent! UnTex" -c "w $sorce.temp" -c "q!"
+unmm $sorce.temp
+pandoc -o ${sorce/.tex/.docx} -f latex $sorce.temp
+rm $sorce.temp

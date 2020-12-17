@@ -1,0 +1,6 @@
+#! /bin/bash
+
+sorce="$*" #to deal with stupid spaces
+
+lowriter --convert-to docx --headless "$sorce" &> /dev/null
+echo "converted file" $sorce

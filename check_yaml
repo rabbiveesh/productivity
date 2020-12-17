@@ -1,0 +1,12 @@
+#! /usr/bin/env perl
+
+use v5.22;
+use Mojo::File qw/path/;
+use YAML::XS;
+use Data::Printer;
+
+for (@ARGV) {
+  my $yaml = Load path($_)->slurp;
+  say $_;
+  p $yaml;
+}

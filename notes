@@ -1,0 +1,64 @@
+#! /usr/bin/perl
+
+use v5.22;
+use local::lib;
+use Mojo::File qw/path/;
+use feature qw/postderef postderef_qq/;
+no warnings qw/experimental::postderef/;
+
+my $topic = shift or die <<"USAGE";
+Usage: notes  < name >
+  Takes the name of a topic, and creates a .tex file with it and also a folder
+  containing lomdus.yml, scratchpad.md, and mm.yml.
+
+USAGE
+my $new_dir = path($topic)->make_path;
+
+my %templates;
+$templates{yml}{lomdus} = <<LOMDUS;
+questions:
+  fundamental:
+facts:
+  objective:
+  machlokes:
+chakiros:
+  - 
+diyukim:
+  -
+cases:
+LOMDUS
+
+$templates{yml}{mm} = <<MM;
+gemara:
+  - daf:
+    sugyos:
+rambam:
+  - halacha: 
+    sugyos:
+rishonim:
+  gemara:
+    - mareh makom:
+      sugyos:
+        -
+      diyukim:
+MM
+
+$templates{md}{scratchpad} = '# vim: ft=yaml fo=crjqltn';
+
+for my $filetype ( keys %templates ) {
+  for my $filename ( keys $templates{$filetype}->%* ) {
+    my $file = $new_dir->child("$filename.$filetype");
+    next if $file->stat;
+    $file->spurt( $templates{$filetype}{$filename} );
+    say "Wrote $filename.$filetype";
+  }
+}
+
+path("$topic.tex")->touch;
+
+say 'All set up!';
+
+
+#TODO- 
+#  1) introduce versioning, and upgrading.
+#  2) introduce the reverse parser, also versioned

@@ -1,0 +1,25 @@
+#! /usr/bin/env perl
+if ($ENV{'todoing'} == 0){
+print "% vim";
+print ": ft=tex:\n";
+}
+$ENV{'todoing'} += 1;
+END{
+$ENV{'todoing'} -= 1;
+}
+
+while (<>){
+  #recurse into input-ed or include-ed files
+  if (@files = /\\in(put|clude){(.*?)}/g){
+    foreach ($i =1 ; $i <= $#files ; $i++){
+      print `fflatex $files[$i].tex`; 
+      $i++;
+    }
+  };
+  if (/\\final/){
+    print "\nFOUND:\n$_  On line $. in file $ARGV\n";
+  }
+  if (/\{yesclubs\}/){
+    print "\nFOUND:\n$_  On line $. in file $ARGV\n";
+  }
+}

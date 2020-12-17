@@ -1,0 +1,40 @@
+#! /usr/bin/env perl
+#TODO- add in a check (against an env variable) to avoid recursing
+#into  a file more than once
+#
+#TODO- also add a check for things in comments
+if ($ENV{'todoing'} == 0){
+print "% vim";
+print ": ft=tex:\n";
+}
+$ENV{'todoing'} += 1;
+END{
+$ENV{'todoing'} -= 1;
+}
+while (<>){
+  #recurse into input-ed or include-ed files
+  if (@files = /\\in(put|clude){(.*?)}/g){
+    foreach ($i =1 ; $i <= $#files ; $i++){
+      print `todolatex $files[$i].tex`; 
+      $i++;
+    }
+  };
+  if (/TODO/){
+    #save our new line number
+    my $curline= $.;
+    #add the new line to the last one
+    $lastline .= $_;
+    while (<>){
+      #read in more until a line doesn't begin with a comment
+      last if (!/^\s*%/);
+      #and add it to our big lastline
+	$lastline .= $_;
+    }
+    #print our result
+    print "\nFOUND:\n$lastline  On line $curline in file $ARGV\n";
+  }
+  #reset lastline 'cause we don't have a match anymore
+  $lastline=$_;
+  #finish in case we read an EOL while collecting for our lastline
+  last if (!defined $_);
+}
